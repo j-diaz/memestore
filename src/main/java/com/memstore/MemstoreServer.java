@@ -10,9 +10,6 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-/**
- * Created by josediaz on 1/26/18.
- */
 public class MemstoreServer extends KVStore {
 
   final static Logger log = LoggerFactory.getLogger(MemstoreServer.class);
@@ -21,15 +18,16 @@ public class MemstoreServer extends KVStore {
   private ServerSocket serverSocket;
 
   public void listen() throws IOException {
+    log.debug("Attempting to startup...");
     try {
       serverSocket = new ServerSocket(DEFAULT_PORT);
     } catch (IOException e) {
       log.error(e.getMessage());
     }
+    log.info(String.format("Server listening on port: %d ...", DEFAULT_PORT));
     while (true) {
       try {
         Socket conn = serverSocket.accept();
-        log.info(String.format("Server listening on port: %d ...", DEFAULT_PORT));
         handleConnection(conn);
       } catch (IOException e) {
         log.error(e.getMessage());

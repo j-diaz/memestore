@@ -1,10 +1,5 @@
 package com.memstore;
 
-import static com.memstore.ResponseType.*;
-
-/**
- * Created by josediaz on 1/28/18.
- */
 public class MemstoreResponse {
 
   private ResponseType type;
