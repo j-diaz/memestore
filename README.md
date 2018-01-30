@@ -1,4 +1,5 @@
-======================================
-Toy implementation of memcache server
+### Memstore
+
+Toy implementation of memcache server.
 
 
