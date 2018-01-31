@@ -36,6 +36,10 @@ public class MemstoreResponse {
     StringBuilder sb = new StringBuilder();
     switch (type) {
       case GET: {
+        if (value.equals("")) {
+          sb.append("NOT_FOUND\r\n");
+          break;
+        }
         sb.append(parts[0]);
         sb.append(" ");
         sb.append(parts[1]);
@@ -43,8 +47,9 @@ public class MemstoreResponse {
         sb.append(parts[2]);
         sb.append(" ");
         sb.append(parts[3]);
-        sb.append(" ");
+        sb.append("\n");
         sb.append(value);
+        sb.append("\n");
         sb.append(endStatement);
         sb.append("\r\n");
         break;
