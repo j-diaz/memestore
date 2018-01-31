@@ -1,6 +1,11 @@
 package com.memstore;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class MemstoreResponse {
+
+  Logger log = LoggerFactory.getLogger(MemstoreResponse.class);
 
   private ResponseType type;
   private String[] parts;
@@ -38,7 +43,7 @@ public class MemstoreResponse {
         sb.append(parts[2]);
         sb.append(" ");
         sb.append(parts[3]);
-        sb.append("\n");
+        sb.append(" ");
         sb.append(value);
         sb.append(endStatement);
         sb.append("\r\n");
@@ -52,6 +57,7 @@ public class MemstoreResponse {
       default:
         break;
     }
+    log.debug(String.format("MemstoreResponse: %s", sb.toString()));
     return sb.toString();
   }
 

@@ -24,11 +24,18 @@ public class MemstoreServer extends KVStore {
     } catch (IOException e) {
       log.error(e.getMessage());
     }
-    log.info(String.format("Server listening on port: %d ...", DEFAULT_PORT));
+    log.info(String.format("Server listening on port: %d\n", DEFAULT_PORT));
     while (true) {
       try {
         Socket conn = serverSocket.accept();
-        handleConnection(conn);
+        Thread thread = new Thread(() -> {
+          try {
+            handleConnection(conn);
+          } catch (IOException e) {
+            log.error(e.getMessage());
+          }
+        });
+        thread.start();
       } catch (IOException e) {
         log.error(e.getMessage());
       }
@@ -36,6 +43,8 @@ public class MemstoreServer extends KVStore {
   }
 
   private void handleConnection(Socket conn) throws IOException {
+    log.debug(String.format("New connection established %s", conn.getInetAddress()));
+
     BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
     PrintWriter out = new PrintWriter(conn.getOutputStream(), true);
     while (true) {
@@ -52,7 +61,6 @@ public class MemstoreServer extends KVStore {
     }
   }
 
-
   private MemstoreResponse handleCommand(String[] cmds) {
     String first = cmds[0];
     switch (first) {
@@ -62,11 +70,11 @@ public class MemstoreServer extends KVStore {
           break;
         }
         String value = get(key);
-        log.info(String.format("Got command: %s, key: %s, value: %s", first, key, value));
+        log.info(String.format("Got -> command: %s; key: %s; value: %s", first, key, value));
 
         return (new MemstoreResponse())
           .setType(ResponseType.GET)
-          .setParts(new String[] {"VALUE", cmds[1], "0", String.format("%d", value.length()) })
+          .setParts(new String[] { "VALUE", cmds[1], "0", String.format("%d", value.length()) })
           .setValue(value)
           .setEndStatement("END");
       }
@@ -74,7 +82,7 @@ public class MemstoreServer extends KVStore {
         String key = cmds[1];
         String value = cmds[2];
         set(key, value);
-        log.info(String.format("Got command: %s, key: %s, value: %s", first, key, value));
+        log.info(String.format("Got -> command: %s; key: %s; value: %s", first, key, value));
 
         return (new MemstoreResponse())
           .setType(ResponseType.SET)
