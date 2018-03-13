@@ -40,18 +40,12 @@ public class MemstoreResponse {
           sb.append("NOT_FOUND\r\n");
           break;
         }
-        sb.append(parts[0]);
-        sb.append(" ");
-        sb.append(parts[1]);
-        sb.append(" ");
-        sb.append(parts[2]);
-        sb.append(" ");
-        sb.append(parts[3]);
-        sb.append("\n");
-        sb.append(value);
-        sb.append("\n");
-        sb.append(endStatement);
-        sb.append("\r\n");
+	sb.append(
+	  String.format(
+	    "%s %s %s %s\n%s\n%s\r\n",
+	    parts[0], parts[1], parts[2], parts[3], value, endStatement
+          )
+        );
         break;
       }
       case SET: {
